@@ -26,19 +26,28 @@ $(function() {
 
     var scene = new BABYLON.Scene(engine);
 
+    //var camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 2, -Math.PI / 2, 50, BABYLON.Vector3.Zero(), scene);
+
     var camera = new BABYLON.ArcRotateCamera("camera1", -Math.PI/2 , Math.PI/5 * 2, 5, new BABYLON.Vector3(0, 1, 0), scene);
     camera.attachControl(canvas, true);
+    camera.lowerRadiusLimit = 3;
+    camera.upperRadiusLimit = 20;
+    camera.useBouncingBehavior = true;
+
+    camera.useAutoRotationBehavior = true;
+    camera.idleRotationSpinupTime = 5000;
+    camera.idleRotationWaitTime = 3000;
 
     var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
     light.intensity = 0.7;
 
     // import mesh   https://www.eternalcoding.com/?p=313
     const meshPath = staticFolder + meshFolder + currentMeshInfo.meshName + "/"+ currentMeshInfo.meshName + ".babylon";
+    var mainMesh;
+    var meshToColor;
     BABYLON.SceneLoader.ImportMesh(currentMeshInfo.mainMesh, "", meshPath, scene, function (newMeshes, particleSystems) {
 
       // find mainMesh and meshToColor
-      var mainMesh;
-      var meshToColor;
       for(var i = 0; i < newMeshes.length; i++) {
         var mesh = newMeshes[i];
 
@@ -59,10 +68,12 @@ $(function() {
         meshToColor = mainMesh;
       }
 
+      // scale only main mash, the binded ones will follow
       if(currentMeshInfo.scale) {
         mainMesh.scaling = currentMeshInfo.scale;
       }
 
+      camera.setTarget(mainMesh);
 
       // upload texture listener
       $('#upload').on('change', function (evt) {
@@ -96,6 +107,65 @@ $(function() {
         })(f);
         reader.readAsDataURL(f);
       });
+
+
+      // Create a particle system
+      var particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
+
+      //Texture of each particle
+      particleSystem.particleTexture = new BABYLON.Texture(lensFlareFolder + "flare.png", scene);
+
+      // Where the particles come from
+      var fountain = BABYLON.Mesh.CreateBox("foutain", 0.1, scene);
+      fountain.rotate(new BABYLON.Vector3(1, 0, 0), 5 * Math.PI / 12, BABYLON.Space.LOCAL);
+      fountain.translate(BABYLON.Axis.Z, 0.7, BABYLON.Space.WORLD);
+      fountain.translate(BABYLON.Axis.Y, 0.2, BABYLON.Space.WORLD);
+      fountain.isVisible = false;
+
+      // Where the particles come from
+      particleSystem.emitter = fountain; // the starting object, the emitter
+      particleSystem.minEmitBox = new BABYLON.Vector3(-0.4, 0, 0); // Starting all from
+      particleSystem.maxEmitBox = new BABYLON.Vector3(0.4, 0, 0); // To...
+
+      // Colors of all particles
+      particleSystem.color1 = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
+      particleSystem.color2 = new BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
+      particleSystem.colorDead = new BABYLON.Color4(0, 0, 0.2, 0.0);
+
+      // Size of each particle (random between...
+      particleSystem.minSize = 0.1;
+      particleSystem.maxSize = 0.5;
+
+      // Life time of each particle (random between...
+      particleSystem.minLifeTime = 0.3;
+      particleSystem.maxLifeTime = 1.5;
+
+      // Emission rate
+      particleSystem.emitRate = 1500;
+
+      // Blend mode : BLENDMODE_ONEONE, or BLENDMODE_STANDARD
+      particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+
+      // Set the gravity of all particles
+      particleSystem.gravity = new BABYLON.Vector3(0, -9.81, 0);
+
+      // Direction of each particle after it has been emitted
+      particleSystem.direction1 = new BABYLON.Vector3(-7, 8, 3);
+      particleSystem.direction2 = new BABYLON.Vector3(7, 8, -3);
+
+      // Angular speed, in radians
+      particleSystem.minAngularSpeed = 0;
+      particleSystem.maxAngularSpeed = Math.PI;
+
+      // Speed
+      particleSystem.minEmitPower = 1;
+      particleSystem.maxEmitPower = 3;
+      particleSystem.updateSpeed = 0.005;
+
+      // Start the particle system
+      particleSystem.start();
+
+
     });
 
     // take screenshot
@@ -117,7 +187,7 @@ $(function() {
     var flare00 = new BABYLON.LensFlare(0.2, 0, new BABYLON.Color3(1, 1, 1),      lensFlareFolder + "lens5.png", lensFlareSystem);
     var flare01 = new BABYLON.LensFlare(0.5, 0.2, new BABYLON.Color3(0.5, 0.5, 1),lensFlareFolder + "lens4.png", lensFlareSystem);
     var flare02 = new BABYLON.LensFlare(0.2, 1.0, new BABYLON.Color3(1, 1, 1),    lensFlareFolder + "lens4.png", lensFlareSystem);
-    var flare03 = new BABYLON.LensFlare(0.4, 0.4, new BABYLON.Color3(1, 0.5, 1),  lensFlareFolder + "Flare.png", lensFlareSystem);
+    var flare03 = new BABYLON.LensFlare(0.4, 0.4, new BABYLON.Color3(1, 0.5, 1),  lensFlareFolder + "flare.png", lensFlareSystem);
     var flare04 = new BABYLON.LensFlare(0.1, 0.6, new BABYLON.Color3(1, 1, 1),    lensFlareFolder + "lens5.png", lensFlareSystem);
     var flare05 = new BABYLON.LensFlare(0.3, 0.8, new BABYLON.Color3(1, 1, 1),    lensFlareFolder + "lens4.png", lensFlareSystem);
 

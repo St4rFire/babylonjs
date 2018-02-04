@@ -39,7 +39,16 @@ $(function() {
     camera.idleRotationWaitTime = 3000;
 
     var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+    // light.diffuse = new BABYLON.Color3(0, 1, 0);
+    // light.specular = new BABYLON.Color3(0, 1, 0);
     light.intensity = 0.7;
+
+
+    var light2 = new BABYLON.HemisphericLight("light2", new BABYLON.Vector3(0, -2, 0), scene);
+    light2.diffuse = new BABYLON.Color3(1, 0, 0);
+    light2.specular = new BABYLON.Color3(1, 0, 0);
+    light2.intensity = 0.7;
+
 
     // import mesh   https://www.eternalcoding.com/?p=313
     const meshPath = staticFolder + meshFolder + currentMeshInfo.meshName + "/"+ currentMeshInfo.meshName + ".babylon";
@@ -124,8 +133,8 @@ $(function() {
 
       // Where the particles come from
       particleSystem.emitter = fountain; // the starting object, the emitter
-      particleSystem.minEmitBox = new BABYLON.Vector3(-0.4, 0, 0); // Starting all from
-      particleSystem.maxEmitBox = new BABYLON.Vector3(0.4, 0, 0); // To...
+      particleSystem.minEmitBox = new BABYLON.Vector3(-0.3, 0, 0); // Starting all from
+      particleSystem.maxEmitBox = new BABYLON.Vector3(0.3, 0, 0); // To...
 
       // Colors of all particles
       particleSystem.color1 = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);

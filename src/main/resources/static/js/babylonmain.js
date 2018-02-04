@@ -4,19 +4,18 @@ $(function() {
   const meshFolder = "mesh/";
 
   const spaceShipMeshInfo = {
-    modelFile: "Spaceship.babylon",
+    meshName: "spaceship",
     mainMesh: "p2_wedge_geo",
     meshToColor : " / 2",
     scale: new BABYLON.Vector3(0.001, 0.001, 0.001)
   };
 
   const bagMeshInfo = {
-    modelFile: "bag.babylon",
+    meshName: "bag",
     mainMesh: "Box",
   };
 
   const currentMeshInfo = spaceShipMeshInfo;
-
 
 
   var canvas = document.getElementById('renderCanvas');
@@ -34,8 +33,10 @@ $(function() {
     light.intensity = 0.7;
 
     // import mesh   https://www.eternalcoding.com/?p=313
-    BABYLON.SceneLoader.ImportMesh(currentMeshInfo.meshName, "", staticFolder + meshFolder + currentMeshInfo.modelFile, scene, function (newMeshes, particleSystems) {
+    const meshPath = staticFolder + meshFolder + currentMeshInfo.meshName + "/"+ currentMeshInfo.meshName + ".babylon";
+    BABYLON.SceneLoader.ImportMesh(currentMeshInfo.mainMesh, "", meshPath, scene, function (newMeshes, particleSystems) {
 
+      // find mainMesh and meshToColor
       var mainMesh;
       var meshToColor;
       for(var i = 0; i < newMeshes.length; i++) {
@@ -50,14 +51,18 @@ $(function() {
       }
 
       if(!mainMesh) {
-        console.log(currentMeshInfo.meshToColor + " not found")
+        console.log(currentMeshInfo.mainMesh + " not found");
+        return;
       }
 
       if(!meshToColor) {
         meshToColor = mainMesh;
       }
 
-      mainMesh.scaling = currentMeshInfo.scale;
+      if(currentMeshInfo.scale) {
+        mainMesh.scaling = currentMeshInfo.scale;
+      }
+
 
       // upload texture listener
       $('#upload').on('change', function (evt) {

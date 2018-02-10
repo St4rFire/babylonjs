@@ -74,7 +74,7 @@ $(function() {
     // ------------------------
     // particle system setup
     // ------------------------
-    addParticleTail(scene, staticFolder, null); //mainMesh
+    addParticleTail(scene, staticFolder, mainMesh);
   });
 
 
@@ -84,8 +84,8 @@ $(function() {
   // ------------------------
   loadMesh(scene, staticFolder, meshFolder, currentMeshInfo, function(mainMeshEnemy, meshToColorEnemy) {
 
+    //addParticleTail(scene, staticFolder, mainMesh);
     updateMeshTextureByPath(scene, meshToColorEnemy, staticFolder + "mesh/spaceship/violet.png");
-    addParticleTail(scene, staticFolder, mainMeshEnemy);
 
     var alpha = 0;
     scene.registerBeforeRender(function () {
@@ -102,7 +102,7 @@ $(function() {
 
   // var music = new BABYLON.Sound("Violons", staticFolder + "assets/sounds/violons11.wav", scene, function () {}, { loop: true, autoplay: true });
   // music.attachToMesh(box);
-
+  
 
 
 

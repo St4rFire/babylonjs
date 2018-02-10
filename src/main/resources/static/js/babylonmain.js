@@ -89,7 +89,7 @@ $(function() {
 
     var alpha = 0;
     scene.registerBeforeRender(function () {
-      mainMeshEnemy.position = new BABYLON.Vector3(Math.cos(alpha) * 30, -9, Math.sin(alpha) * 30);
+      mainMeshEnemy.position = new BABYLON.Vector3(Math.cos(alpha) * 10, 0, Math.sin(alpha) * 10);
       alpha += 0.01;
     });
   });
@@ -99,7 +99,7 @@ $(function() {
   // box.material = new BABYLON.StandardMaterial("Mat", scene);
   // box.material.diffuseTexture = new BABYLON.Texture(staticFolder + "assets/textures/crate.png", scene);
   // box.position = new BABYLON.Vector3(10, -9, 0);
-
+  mainMesh
   // var music = new BABYLON.Sound("Violons", staticFolder + "assets/sounds/violons11.wav", scene, function () {}, { loop: true, autoplay: true });
   // music.attachToMesh(box);
 

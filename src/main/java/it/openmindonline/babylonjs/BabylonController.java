@@ -26,6 +26,12 @@ public class BabylonController
         return "bag";
     }
 
+    @RequestMapping("/scene")
+    public String scene(Model model) {
+        return "scene";
+    }
+
+
     @RequestMapping(value = "/downloadtexture")
     public void downloadOrder(@RequestParam(value="name") String name, HttpServletResponse response)
     {

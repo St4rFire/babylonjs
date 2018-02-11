@@ -1,33 +1,29 @@
 package it.openmindonline.babylonjs;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 
 @Controller
 public class BabylonController
 {
 
-    @RequestMapping("/babylon")
-    public String greeting(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
+    @RequestMapping("/")
+    public String babylon(Model model) {
         return "babylon";
+    }
+
+    @RequestMapping("/bag")
+    public String bag(Model model) {
+        return "bag";
     }
 
     @RequestMapping(value = "/downloadtexture")

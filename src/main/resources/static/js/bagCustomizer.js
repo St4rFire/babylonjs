@@ -1,5 +1,7 @@
 $(function() {
 
+    //https://www.babylonjs.com/demos/flighthelmet/
+
   // ------------------------
   // mesh choice
   // ------------------------

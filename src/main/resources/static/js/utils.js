@@ -77,7 +77,7 @@ function addParticleTail(scene, staticFolder, parentModel) {
   fountain.isVisible = false;
 
   if(parentModel) {
-    fountain.parent = parentModel;
+    //fountain.parent = parentModel;
   }
 
   // Where the particles come from

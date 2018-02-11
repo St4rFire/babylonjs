@@ -1,13 +1,27 @@
+/**
+ * Load a meah and invoke a callback passing mainMesh, meshToColor
+ *
+ * es mesh info obj:
+ * {
+ *  meshName: "spaceship",
+ *  mainMesh: "p2_wedge_geo",
+ *  meshToColor : " / 2",
+ *  scale: new BABYLON.Vector3(0.001, 0.001, 0.001)
+ * };
+ *
+ * https://www.eternalcoding.com/?p=313
+ * model rotation http://www.html5gamedevs.com/topic/20306-how-to-rotate-mesh-instead-of-the-camera/
+ * http://www.babylonjs-playground.com/#CGXLT#5
 
+ * @param scene
+ * @param meshPath
+ * @param currentMeshInfo
+ * @param callback
+ */
+function loadMesh(scene, meshPath, currentMeshInfo, callback) {
 
-function loadMesh(scene, staticFolder, meshFolder, currentMeshInfo, callback) {
-
-  // es https://www.eternalcoding.com/?p=313
-  // model rotation http://www.html5gamedevs.com/topic/20306-how-to-rotate-mesh-instead-of-the-camera/
-  // http://www.babylonjs-playground.com/#CGXLT#5
-
-  const meshPath = staticFolder + meshFolder + currentMeshInfo.meshName + "/"+ currentMeshInfo.meshName + ".babylon";
-  BABYLON.SceneLoader.ImportMesh(currentMeshInfo.mainMesh, "", meshPath, scene, function (newMeshes, particleSystems) {
+  const fullMeshPath = meshPath + currentMeshInfo.meshName + "/"+ currentMeshInfo.meshName + ".babylon";
+  BABYLON.SceneLoader.ImportMesh(currentMeshInfo.mainMesh, "", fullMeshPath, scene, function (newMeshes, particleSystems) {
     var mainMesh;
     var meshToColor;
 

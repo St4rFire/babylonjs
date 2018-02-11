@@ -4,9 +4,6 @@ $(function() {
   // mesh choice
   // ------------------------
 
-  const staticFolder = "babylon/";
-  const meshFolder = "mesh/";
-
   const spaceShipMeshInfo = {
     meshName: "spaceship",
     mainMesh: "p2_wedge_geo",
@@ -20,6 +17,8 @@ $(function() {
   };
 
   const currentMeshInfo = spaceShipMeshInfo;
+  const staticFolder = "babylon/";
+  const meshPath = staticFolder + "mesh/";
 
 
   // ------------------------
@@ -66,7 +65,7 @@ $(function() {
   // ------------------------
   var meshToColor;
   var mainMesh;
-  loadMesh(scene, staticFolder, meshFolder, currentMeshInfo, function(mainMeshPlayer, meshToColorPlayer) {
+  loadMesh(scene, meshPath, currentMeshInfo, function(mainMeshPlayer, meshToColorPlayer) {
     meshToColor = meshToColorPlayer;
     mainMesh = mainMeshPlayer;
     camera.setTarget(mainMesh);
@@ -82,7 +81,7 @@ $(function() {
   // ------------------------
   // The enemy
   // ------------------------
-  loadMesh(scene, staticFolder, meshFolder, currentMeshInfo, function(mainMeshEnemy, meshToColorEnemy) {
+  loadMesh(scene, meshPath, currentMeshInfo, function(mainMeshEnemy, meshToColorEnemy) {
 
     updateMeshTextureByPath(scene, meshToColorEnemy, staticFolder + "mesh/spaceship/violet.png");
     addParticleTail(scene, staticFolder, mainMeshEnemy);

@@ -21,9 +21,9 @@ public class BabylonController
         return "spaceship";
     }
 
-    @RequestMapping("/bag")
+    @RequestMapping(path = {"/bag", "/meshCustomizer"})
     public String bag(Model model) {
-        return "bag";
+        return "meshCustomizer";
     }
 
 

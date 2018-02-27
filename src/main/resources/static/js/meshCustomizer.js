@@ -10,14 +10,14 @@ $(function() {
   // ------------------------
 
   const bagMeshInfo = {
-    meshName: "bag",
-    mainMesh: "Box",
+    fileName: "bag",
+    meshName: "Box",
   };
 
 
   const bagTestok = {
-    meshName: "test",
-    mainMesh: "root",
+    fileName: "test",
+    meshName: "root",
     scale: new BABYLON.Vector3(0.1, 0.1, 0.1)
   };
 
@@ -29,6 +29,14 @@ $(function() {
   // ------------------------
   // scene setup
   // ------------------------
+
+  // avoid missing polygons
+  var removeBackFaceCulling = function (scene) {
+    $.each(scene.materials, function( index, value ) {
+      value.backFaceCulling = false;
+    });
+  };
+
 
   var canvas = document.getElementById('renderCanvas');
   var engine = new BABYLON.Engine(canvas, true);
@@ -61,23 +69,20 @@ $(function() {
   // mesh setup
   // ------------------------
 
-  var mainMesh;
+  var mainMash;
 
-  const fullMeshPath = meshPath + currentMeshInfo.meshName + "/"+ currentMeshInfo.meshName + ".babylon";
-  BABYLON.SceneLoader.ImportMesh(currentMeshInfo.mainMesh, "", fullMeshPath, scene,
+  const fullMeshPath = meshPath + currentMeshInfo.fileName + "/"+ currentMeshInfo.fileName + ".babylon";
+  BABYLON.SceneLoader.ImportMesh(currentMeshInfo.meshName, "", fullMeshPath, scene,
     function (newMeshes, particleSystems) {
-      if (newMeshes.length) {
-        mainMesh = newMeshes[0];
+      if (newMeshes) {
+        mainMash = newMeshes[0];
 
         if(currentMeshInfo.scale) {
-          mainMesh.scaling = currentMeshInfo.scale;
+          mainMash.scaling = currentMeshInfo.scale;
         }
 
-        $.each(scene.materials, function( index, value ) {
-          value.backFaceCulling = false;
-        });
-
-        camera.setTarget(mainMesh);
+        removeBackFaceCulling(scene);
+        camera.setTarget(mainMash);
       }
     },
     function (progressEvent) {
@@ -129,11 +134,27 @@ $(function() {
       return function (e) {
 
         var image = e.target.result;
-        updateMeshTextureByBytes(scene, mainMesh, image);
+        
+        var texture = new BABYLON.Texture('data:new_texture' + new Date().getTime(), scene, true,
+          true, BABYLON.Texture.BILINEAR_SAMPLINGMODE, null, null, image, true);
+
+        if (!mainMash.material) {
+          mainMash.material = new BABYLON.StandardMaterial("newMaterial" + new Date().getTime(), scene);
+        }
+
+        // try to change only subMaterials to preserve other settings
+        if (mainMash.material.subMaterials) {
+          mainMash.material.subMaterials[0].diffuseTexture = texture;
+        } else {
+          mainMash.material.diffuseTexture = texture;
+        }
+
+        removeBackFaceCulling(scene);
       };
-    })(f);
-    reader.readAsDataURL(f);
+    })(file);
+    reader.readAsDataURL(file);
   });
+
 
   // ------------------------
   // take screenshot

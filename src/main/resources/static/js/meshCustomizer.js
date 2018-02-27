@@ -107,9 +107,6 @@ $(function() {
   });
 
 
-  window.scene = scene;
-
-
   // ------------------------
   // upload texture listener
   // ------------------------

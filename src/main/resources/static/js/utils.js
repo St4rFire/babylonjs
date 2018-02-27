@@ -175,6 +175,7 @@ function updateMeshTextureByBytes(scene, meshToColor, image) {
   }
 
   meshToColor.material.diffuseTexture = texture;
+  meshToColor.material.backFaceCulling = false;
 }
 
 function updateMeshTextureByPath(scene, meshToColor, path) {
@@ -185,4 +186,5 @@ function updateMeshTextureByPath(scene, meshToColor, path) {
   }
 
   meshToColor.material.diffuseTexture = texture;
+  meshToColor.material.backFaceCulling = false;
 }

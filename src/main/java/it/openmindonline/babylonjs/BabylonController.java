@@ -16,19 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class BabylonController
 {
 
-    @RequestMapping("/")
-    public String babylon(Model model) {
-        return "babylon";
+    @RequestMapping(path = {"/", "/spaceship"})
+    public String spaceship(Model model) {
+        return "spaceship";
     }
 
     @RequestMapping("/bag")
     public String bag(Model model) {
         return "bag";
-    }
-
-    @RequestMapping("/scene")
-    public String scene(Model model) {
-        return "scene";
     }
 
 

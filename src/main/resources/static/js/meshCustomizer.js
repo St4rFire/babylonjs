@@ -1,6 +1,9 @@
 $(function() {
 
-    //https://www.babylonjs.com/demos/flighthelmet/
+
+  if (!BABYLON.Engine.isSupported()) {
+    return
+  }
 
   // ------------------------
   // mesh choice
@@ -11,7 +14,14 @@ $(function() {
     mainMesh: "Box",
   };
 
-  const currentMeshInfo = bagMeshInfo;
+
+  const bagTestok = {
+    meshName: "test",
+    mainMesh: "root",
+    scale: new BABYLON.Vector3(0.1, 0.1, 0.1)
+  };
+
+  const currentMeshInfo = bagTestok;
   const staticFolder = "babylon/";
   const meshPath = staticFolder + "mesh/";
 
@@ -23,28 +33,27 @@ $(function() {
   var canvas = document.getElementById('renderCanvas');
   var engine = new BABYLON.Engine(canvas, true);
   var scene = new BABYLON.Scene(engine);
+  scene.debugLayer.show();
+  scene.clearColor = new BABYLON.Color3(1, 1, 1);
 
   // setup camera
-  var camera = new BABYLON.ArcRotateCamera("camera1", -Math.PI/2 , Math.PI/5 * 2, 5, new BABYLON.Vector3(0, 1, 0), scene);
+  var camera = new BABYLON.ArcRotateCamera("camera1", -Math.PI/2 , Math.PI/5 * 2, 50, new BABYLON.Vector3(0, 1, 0), scene);
   camera.attachControl(canvas, true);
-  camera.lowerRadiusLimit = 3;
-  camera.upperRadiusLimit = 20;
+  camera.lowerRadiusLimit = 30;
+  camera.upperRadiusLimit = 100;
   camera.useBouncingBehavior = true;
   camera.useAutoRotationBehavior = true;
   camera.idleRotationSpinupTime = 5000;
   camera.idleRotationWaitTime = 3000;
 
   // setup light 1
-  var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-  // light.diffuse = new BABYLON.Color3(0, 1, 0);
-  // light.specular = new BABYLON.Color3(0, 1, 0);
+  var light = new BABYLON.PointLight("pointLight", new BABYLON.Vector3(1, 10, 1), scene);
   light.intensity = 0.7;
 
   // setup light 2
   var light2 = new BABYLON.HemisphericLight("light2", new BABYLON.Vector3(0, -2, 0), scene);
-  light2.diffuse = new BABYLON.Color3(1, 0, 0);
-  light2.specular = new BABYLON.Color3(1, 0, 0);
-  light2.intensity = 0.7;
+  light2.specular = new BABYLON.Color3(0, 0, 0);
+  light2.intensity = 2;
 
 
 
@@ -52,13 +61,32 @@ $(function() {
   // mesh setup
   // ------------------------
 
-  var meshToColor;
   var mainMesh;
-  loadMesh(scene, meshPath, currentMeshInfo, function(mainMeshBag, meshToColorBag) {
-    meshToColor = meshToColorBag;
-    mainMesh = mainMeshBag;
-    camera.setTarget(mainMesh);
-  });
+
+  const fullMeshPath = meshPath + currentMeshInfo.meshName + "/"+ currentMeshInfo.meshName + ".babylon";
+  BABYLON.SceneLoader.ImportMesh(currentMeshInfo.mainMesh, "", fullMeshPath, scene,
+    function (newMeshes, particleSystems) {
+      if (newMeshes.length) {
+        mainMesh = newMeshes[0];
+
+        if(currentMeshInfo.scale) {
+          mainMesh.scaling = currentMeshInfo.scale;
+        }
+
+        $.each(scene.materials, function( index, value ) {
+          value.backFaceCulling = false;
+        });
+
+        camera.setTarget(mainMesh);
+      }
+    },
+    function (progressEvent) {
+      console.log("On progress " + progressEvent);
+    },
+    function (scene, message, exception) {
+      console.log("Error loading mesh " + fullMeshPath + " : " + message);
+    }
+  );
 
 
   // ------------------------
@@ -75,6 +103,8 @@ $(function() {
   });
 
 
+  window.scene = scene;
+
 
   // ------------------------
   // upload texture listener
@@ -86,10 +116,10 @@ $(function() {
       return;
     }
 
-    var f = files[0];
+    var file = files[0];
 
     // Only process image files.
-    if (!f.type.match('image.*')) {
+    if (!file.type.match('image.*')) {
       return;
     }
 
@@ -99,7 +129,7 @@ $(function() {
       return function (e) {
 
         var image = e.target.result;
-        updateMeshTextureByBytes(scene, meshToColor, image);
+        updateMeshTextureByBytes(scene, mainMesh, image);
       };
     })(f);
     reader.readAsDataURL(f);
@@ -112,5 +142,6 @@ $(function() {
   $('#takescreenshot').on('click',  function (evt) {
     BABYLON.Tools.CreateScreenshotUsingRenderTarget(engine, camera, 400);
   });
+
 
 });

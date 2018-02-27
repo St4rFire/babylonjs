@@ -34,7 +34,7 @@ $(function() {
   //scene.collisionsEnabled = true;
 
   // setup camera
-  var camera = new BABYLON.ArcRotateCamera("camera1", -Math.PI/2 , Math.PI/5 * 2, 5, new BABYLON.Vector3(0, 1, 0), scene);
+  var camera = new BABYLON.ArcRotateCamera("camera1", 0 , 0, 5, new BABYLON.Vector3(0, 1, 0), scene);
   camera.attachControl(canvas, true);
   camera.lowerRadiusLimit = 3;
   camera.upperRadiusLimit = 20;

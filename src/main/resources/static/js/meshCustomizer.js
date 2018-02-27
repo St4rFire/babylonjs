@@ -9,12 +9,6 @@ $(function() {
   // mesh choice
   // ------------------------
 
-  const bagMeshInfo = {
-    fileName: "bag",
-    meshName: "Box",
-  };
-
-
   const bagTestok = {
     fileName: "test",
     meshName: "root",
@@ -89,7 +83,7 @@ $(function() {
       console.log("On progress " + progressEvent);
     },
     function (scene, message, exception) {
-      console.log("Error loading mesh " + fullMeshPath + " : " + message);
+      console.log("Error loading mesh " + fullMeshPath + " : " + message + ", " + exception);
     }
   );
 

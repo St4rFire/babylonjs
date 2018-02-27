@@ -31,7 +31,7 @@ public class BabylonController
     public void downloadOrder(@RequestParam(value="name") String name, HttpServletResponse response)
     {
 
-        try (InputStream in = getClass().getResourceAsStream("/static/babylon/mesh/spaceship/0.png")) // todo use convention
+        try (InputStream in = getClass().getResourceAsStream("/static/babylon/mesh/"+name+"/"+name+".png"))
         {
             response.setHeader("Content-Disposition", "attachment; filename=" + name + ".png");
             response.setContentType("application/xml");

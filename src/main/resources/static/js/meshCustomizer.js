@@ -9,13 +9,18 @@ $(function() {
   // mesh choice
   // ------------------------
 
-  const bagTestok = {
-    fileName: "test",
-    meshName: "root",
-    scale: new BABYLON.Vector3(0.1, 0.1, 0.1)
+  var canvas = document.getElementById('renderCanvas');
+  var productId = $( canvas ).data("productid");
+
+  const mashesConfig = {
+    "test" : {
+      fileName: "test",
+      meshName: "root",
+      scale: new BABYLON.Vector3(0.1, 0.1, 0.1)
+    }
   };
 
-  const currentMeshInfo = bagTestok;
+  const currentMeshInfo = mashesConfig[productId];
   const staticFolder = "babylon/";
   const meshPath = staticFolder + "mesh/";
 
@@ -35,8 +40,8 @@ $(function() {
   var canvas = document.getElementById('renderCanvas');
   var engine = new BABYLON.Engine(canvas, true);
   var scene = new BABYLON.Scene(engine);
-  scene.debugLayer.show();
   scene.clearColor = new BABYLON.Color3(1, 1, 1);
+  //scene.debugLayer.show();
 
   // setup camera
   var camera = new BABYLON.ArcRotateCamera("camera1", -Math.PI/2 , Math.PI/5 * 2, 50, new BABYLON.Vector3(0, 1, 0), scene);
@@ -109,7 +114,7 @@ $(function() {
   // upload texture listener
   // ------------------------
 
-  $('#upload').on('change', function (evt) {
+  $('#upload-new-texture').on('change', function (evt) {
     var files = evt.target.files; // FileList object
     if (!files) {
       return;
@@ -128,7 +133,6 @@ $(function() {
       return function (e) {
 
         var image = e.target.result;
-        
         var texture = new BABYLON.Texture('data:new_texture' + new Date().getTime(), scene, true,
           true, BABYLON.Texture.BILINEAR_SAMPLINGMODE, null, null, image, true);
 

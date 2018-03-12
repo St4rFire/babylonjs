@@ -5,7 +5,7 @@
     <title>Babylon - Bag customizer</title>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="/js/babylon.custom.js"></script>
     <script src="/js/meshCustomizer.js"></script>
     <style>
       html, body {
@@ -29,10 +29,19 @@
     <canvas id="renderCanvas" data-productid="test"></canvas>
 
     <!-- upload new texture -->
+    Client png:
     <input id="upload-new-texture" type="file" style=""/>
+
+    Server pdf:
+    <input id="upload-and-convert-new-texture" type="file" style=""/>
+
 
     <!-- download default texture -->
     <a href="/downloadtexture?name=test" target="_blank">Download texture</a>
+    <a href="/files/test" target="_blank">Download texture spring</a>
+
+
+    <a href="/convertPdfToPng?name=test" target="_blank">Convert texture</a>
 
     <!-- take screenshot -->
     <button id="takescreenshot" type="button">ScreenShot</button>

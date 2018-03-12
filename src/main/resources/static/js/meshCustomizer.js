@@ -41,7 +41,7 @@ $(function() {
   var engine = new BABYLON.Engine(canvas, true);
   var scene = new BABYLON.Scene(engine);
   scene.clearColor = new BABYLON.Color3(1, 1, 1);
-  //scene.debugLayer.show();
+  scene.debugLayer.show();
 
   // setup camera
   var camera = new BABYLON.ArcRotateCamera("camera1", -Math.PI/2 , Math.PI/5 * 2, 50, new BABYLON.Vector3(0, 1, 0), scene);
@@ -57,12 +57,17 @@ $(function() {
   var light = new BABYLON.PointLight("pointLight", new BABYLON.Vector3(1, 10, 1), scene);
   light.intensity = 0.7;
 
-  // setup light 2
+  // setup light down
   var light2 = new BABYLON.HemisphericLight("light2", new BABYLON.Vector3(0, -2, 0), scene);
   light2.specular = new BABYLON.Color3(0, 0, 0);
   light2.intensity = 2;
+  light2.shadowEnabled = false;
 
-
+  // setup light up
+  var light3 = new BABYLON.HemisphericLight("light3", new BABYLON.Vector3(0, 3, 0), scene);
+  light3.specular = new BABYLON.Color3(0, 0, 0);
+  light3.intensity = 1;
+  light3.shadowEnabled = false;
 
   // ------------------------
   // mesh setup
@@ -92,7 +97,6 @@ $(function() {
     }
   );
 
-
   // ------------------------
   // run the render loop
   // ------------------------
@@ -108,7 +112,7 @@ $(function() {
 
 
   // ------------------------
-  // upload texture listener
+  // upload png texture listener - client only
   // ------------------------
 
   $('#upload-new-texture').on('change', function (evt) {
@@ -148,6 +152,65 @@ $(function() {
       };
     })(file);
     reader.readAsDataURL(file);
+  });
+
+
+
+  // ------------------------
+  // upload pdf texture listener - server conversion
+  // ------------------------
+
+  $('#upload-and-convert-new-texture').on('change', function (evt) {
+    var files = evt.target.files; // FileList object
+    if (!files || !mainMash) {
+      return;
+    }
+
+    var file = files[0];
+
+    // Only process pdf files.
+    // if (!file.type.match('image.*')) {
+    //   return;
+    // }
+
+
+    var formData = new FormData();
+    formData.append('pdf', file, file.name);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/uploadPdf', true);
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+
+        var image = xhr.response;
+
+        if (!image) {
+          return
+        }
+
+        image = "data:image/png;base64," + image;
+        var texture = new BABYLON.Texture('data:new_texture' + new Date().getTime(), scene, true,
+          true, BABYLON.Texture.BILINEAR_SAMPLINGMODE, null, null, image, true);
+
+        if (!mainMash.material) {
+          mainMash.material = new BABYLON.StandardMaterial("newMaterial" + new Date().getTime(), scene);
+        }
+
+        // try to change only subMaterials to preserve other settings
+        if (mainMash.material.subMaterials) {
+          mainMash.material.subMaterials[0].diffuseTexture = texture;
+        } else {
+          mainMash.material.diffuseTexture = texture;
+        }
+
+        removeBackFaceCulling(scene);
+
+      } else {
+        alert('An error occurred!');
+      }
+    };
+    xhr.send(formData)
+
   });
 
 
